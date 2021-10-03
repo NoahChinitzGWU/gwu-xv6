@@ -506,3 +506,8 @@ procdump(void)
 		cprintf("\n");
 	}
 }
+
+void 
+procstat(uint which, struct pstat *ps) {
+	
+}

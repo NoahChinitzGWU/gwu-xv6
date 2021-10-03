@@ -85,3 +85,21 @@ sys_uptime(void)
 	release(&tickslock);
 	return xticks;
 }
+
+int 
+sys_procstat(void) 
+{
+	// Iterate through process table in proc.c find all processes that are children of the given process id
+	// Return to the user with the states
+	// Getting parameters from user level 
+	int pid;
+	
+	// Which parameter
+	if (argint(0, &pid) < 0) return -1;
+
+	struct pstat *ps;
+
+	if (argptr(1, (void *)&ps, sizeof(ps)) < 0) return -1;
+
+
+}
