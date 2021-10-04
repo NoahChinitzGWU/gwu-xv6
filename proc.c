@@ -527,7 +527,7 @@ procstat(uint which, struct pstat *ps) {
 		if (which == count) {
 			// If the process is UNUSED, it is freed and we should not return information for it
 			if (p->state == UNUSED) {
-				break;
+				return -1;
 			}
 			// Insert information regarding the process to ps
 			ps->pid = p->pid;
