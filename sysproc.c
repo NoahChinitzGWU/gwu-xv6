@@ -89,17 +89,19 @@ sys_uptime(void)
 int 
 sys_procstat(void) 
 {
-	// Iterate through process table in proc.c find all processes that are children of the given process id
-	// Return to the user with the states
-	// Getting parameters from user level 
-	int pid;
-	
-	// Which parameter
-	if (argint(0, &pid) < 0) return -1;
+	// Logic that the kernel will execute in response to receiving the 
+	// procstat syscall.
+	// Getting the which argument
+	int which;
+	if (argint(0, &which) < 0) {
+		return -1;
+	}
 
+	// Getting the pstat argument
 	struct pstat *ps;
+	if (argptr(1, (void *)&ps, sizeof(ps)) < 0) {
+		return -1;
+	}
 
-	if (argptr(1, (void *)&ps, sizeof(ps)) < 0) return -1;
-
-
+	return procstat(which, ps);
 }

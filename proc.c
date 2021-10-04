@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "pstat.h"
 
 struct {
 	struct spinlock lock;
@@ -507,7 +508,74 @@ procdump(void)
 	}
 }
 
-void 
+// which: Specifies which of the active processes in the system the caller wants information about
+// which is not a process id, or any similar value
+// Return 0: While sys. call returns informaiton about the process in the struct pstat arugment.
+// Return 1: which gets as large as the number of active processes in the system
+//           Indicate that the caller has iterated through each proccess in the system
+// Return -1: Any error cases
+int 
 procstat(uint which, struct pstat *ps) {
+	// Acquire informaiton for all processes in the system
+	acquire(&ptable.lock);
+
+	// Looking through the process table to find the "ith" process defined by which
+	uint count = 0;
+	struct proc *p;
+	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+		// Checking to see if we found the process defined by which
+		if (which == count) {
+			// If the process is UNUSED, it is freed and we should not return information for it
+			if (p->state == UNUSED) {
+				break;
+			}
+			// Insert information regarding the process to ps
+			ps->pid = p->pid;
+			safestrcpy(ps->name, p->name, sizeof(p->name));
+
+			// Process state = Embryo
+			if (p->state == EMBRYO) {
+				ps->state = 'E';
+
+				// Process in EMBRYO state doesn't have valid ppid, so we set it to 0
+				ps->ppid = 0;
+			}
+
+			// Process state = Sleeping
+			if (p->state == SLEEPING) {
+				ps->state = 'S';
+				ps->ppid = p->parent->pid;
+			}
+
+			// Process state = Runnable
+			if (p->state == RUNNABLE) {
+				ps->state = 'N';
+				ps->ppid = p->parent->pid;
+			}
+
+			// Process state = Running
+			if (p->state == RUNNING) {
+				ps->state = 'R';
+				ps->ppid = p->parent->pid;
+			}
+
+			// Process state = Zombie
+			if (p->state == ZOMBIE) {
+				ps->state = 'Z';
+				ps->ppid = p->parent->pid;
+			}
+
+			release(&ptable.lock);
+			return 0;
+		}
+		count++;
+	}
+
+	release(&ptable.lock);
 	
+	if (which >= count) {
+		return 1;
+	}
+
+	return -1;
 }
