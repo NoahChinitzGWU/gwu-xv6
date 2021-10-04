@@ -510,7 +510,7 @@ procdump(void)
 
 // which: Specifies which of the active processes in the system the caller wants information about
 // which is not a process id, or any similar value
-// Return 0: While sys. call returns informaiton about the process in the struct pstat arugment.
+// Return 0: While sys. call returns information about the process in the struct pstat arugment.
 // Return 1: which gets as large as the number of active processes in the system
 //           Indicate that the caller has iterated through each proccess in the system
 // Return -1: Any error cases

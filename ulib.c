@@ -97,3 +97,17 @@ memmove(void *vdst, void *vsrc, int n)
 	while (n-- > 0) *dst++= *src++;
 	return vdst;
 }
+
+// pid ppid state name
+void 
+ps(void)
+{
+	struct pstat *ps;
+	int ps = procstat(0, ps);
+	uint iterator = 0;
+	while (procstat(iterator, ps) == 1) {
+		printf("%i %i %c %s", ps->pid, ps->ppid, ps->state, ps->name);
+		iterator++;
+	}
+	
+}
