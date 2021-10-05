@@ -97,19 +97,16 @@ memmove(void *vdst, void *vsrc, int n)
 	return vdst;
 }
 
-// pid ppid state name
 void 
 ps(void)
 {
-	// Initialize pstat? = struct pstat *ps = malloc(sizeof(*ps))
 	struct pstat ps;
-
-	//ps = malloc(sizeof(*ps)); // Error: Undefined reference to 'malloc'
 	uint iterator = 0;
-	while (procstat(iterator, &ps) == 1) {
+	while (procstat(iterator, &ps) == 0) {
 		// First argument = "file descriptor" to print to
 		// Setting first argument to 1 so it can print to standard output
-		printf(1, "%i %i %c %s", ps.pid, ps.ppid, ps.state, ps.name);
+		//why does %c work?
+		printf(1, "%d %d %c %s\n", ps.pid, ps.ppid, ps.state, ps.name);
 		iterator++;
 	}
 	

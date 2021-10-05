@@ -522,7 +522,7 @@ procstat(uint which, struct pstat *ps) {
 	// Looking through the process table to find the "ith" process defined by which
 	uint count = 0;
 	struct proc *p;
-	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+	for (p = &ptable.proc[0]; p < &ptable.proc[NPROC]; p++) {
 		// Checking to see if we found the process defined by which
 		if (which == count) {
 			// If the process is UNUSED, it is freed and we should not return information for it
