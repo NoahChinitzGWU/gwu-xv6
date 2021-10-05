@@ -92,15 +92,15 @@ sys_procstat(void)
 {
 	// Logic that the kernel will execute in response to receiving the 
 	// procstat syscall.
+	struct pstat *ps;
+	uint which;
 	// Getting the which argument
-	int which;
-	if (argint(0, &which) < 0) {
+	if (argint(0, (int *)&which) < 0) {
 		return -1;
 	}
 
 	// Getting the pstat argument
-	struct pstat *ps;
-	if (argptr(1, (void *)&ps, sizeof(ps)) < 0) {
+	if (argptr(1, (void *)&ps, sizeof(*ps)) < 0) {
 		return -1;
 	}
 

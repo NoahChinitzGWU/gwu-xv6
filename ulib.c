@@ -102,11 +102,15 @@ memmove(void *vdst, void *vsrc, int n)
 void 
 ps(void)
 {
-	struct pstat *ps;
-	int ps = procstat(0, ps);
+	// Initialize pstat? = struct pstat *ps = malloc(sizeof(*ps))
+	struct pstat ps;
+
+	//ps = malloc(sizeof(*ps)); // Error: Undefined reference to 'malloc'
 	uint iterator = 0;
-	while (procstat(iterator, ps) == 1) {
-		printf("%i %i %c %s", ps->pid, ps->ppid, ps->state, ps->name);
+	while (procstat(iterator, &ps) == 1) {
+		// First argument = "file descriptor" to print to
+		// Setting first argument to 1 so it can print to standard output
+		printf(1, "%i %i %c %s", ps.pid, ps.ppid, ps.state, ps.name);
 		iterator++;
 	}
 	
