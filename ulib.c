@@ -3,7 +3,6 @@
 #include "fcntl.h"
 #include "user.h"
 #include "x86.h"
-#include "pstat.h"
 
 char *
 strcpy(char *s, char *t)
