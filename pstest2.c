@@ -4,37 +4,70 @@
 int main (void) {
     int pid;
     pid = fork();
-    if (pid == 0) {
-        //sleep(100);
+    if (pid < 0) {
+        exit();
+    } else if (pid > 0) {
+        wait();
+        exit();
+    } else if (pid == 0) {
         pid = fork();
-        if (pid == 0) {
-            //sleep(100);
-            pid = fork();
-            if (pid == 0) {
-                //sleep(100);
+            if (pid < 0) {
+                exit();
+            } else if (pid > 0) {
+                wait();
+                exit();
+            } else if (pid == 0) {
                 pid = fork();
-                if (pid == 0) {
-                    //sleep(100);
-                    pid = fork();
-                    if (pid == 0) {
-                        //sleep(100);
+                    if (pid < 0) {
+                        exit();
+                    } else if (pid > 0) {
+                        wait();
+                        exit();
+                    } else if (pid == 0) {
                         pid = fork();
-                        if (pid == 0) {
-                            //sleep(100);
-                            pid = fork();
-                            if (pid == 0) {
-                                //sleep(100);
+                            if (pid < 0) {
+                                exit();
+                            } else if (pid > 0) {
+                                wait();
+                                exit();
+                            } else if (pid == 0) {
                                 pid = fork();
-                                // ps();
-                                // exit();
+                                    if (pid < 0) {
+                                        exit();
+                                    } else if (pid > 0) {
+                                        wait();
+                                        exit();
+                                    } else if (pid == 0) {
+                                        pid = fork();
+                                            if (pid < 0) {
+                                                exit();
+                                            } else if (pid > 0) {
+                                                wait();
+                                                exit();
+                                            } else if (pid == 0) {
+                                                pid = fork();
+                                                    if (pid < 0) {
+                                                        exit();
+                                                    } else if (pid > 0) {
+                                                        wait();
+                                                        exit();
+                                                    } else if (pid == 0) {
+                                                        pid = fork();
+                                                        if (pid < 0) {
+                                                            exit();
+                                                        } else if (pid > 0) {
+                                                            wait();
+                                                            exit();
+                                                        } else if (pid == 0) {
+                                                            ps();
+                                                        }
+                                                    }
+                                            }
+                                    }
                             }
-                        }
                     }
-                }
             }
-        }
     }
-    ps();
     while (wait() != -1);
     exit();  
 }
