@@ -1,5 +1,5 @@
-#include "pstat.h"
 struct stat;
+struct pstat;
 struct rtcdate;
 
 // system calls

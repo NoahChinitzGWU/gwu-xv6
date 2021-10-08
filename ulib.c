@@ -3,6 +3,7 @@
 #include "fcntl.h"
 #include "user.h"
 #include "x86.h"
+#include "pstat.h"
 
 char *
 strcpy(char *s, char *t)
@@ -105,7 +106,6 @@ ps(void)
 	while (procstat(iterator, &ps) == 0) {
 		// First argument = "file descriptor" to print to
 		// Setting first argument to 1 so it can print to standard output
-		//why does %c work??????
 		printf(1, "%d %d %c %s\n", ps.pid, ps.ppid, ps.state, ps.name);
 		iterator++;
 	}
