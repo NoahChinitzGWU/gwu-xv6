@@ -2,23 +2,32 @@
 #include "user.h"
 #include "pstat.h"
 
-int main (void) {
+int
+main(void)
+{
     int pid;
 
     // Parent forks two children
     for (int i = 0; i < 2; i++) {
         pid = fork();
-        // Parent's child fork two children
-        if (pid == 0) {
+        if (pid < 0) {
+            exit();
+        } else if (pid == 0) {
+            // Parent's child fork two children
             for (int j = 0; j < 2; j++) {
                 pid = fork();
-                if (pid > 0) {
-                    fork();
+                if (pid < 0) {
+                    exit();
+                } else if (pid == 0) {
+                    // sleep(100);
+                    wait();
+                    exit();
                 }
             }
+            wait();
+            exit();
         }
     }
-
     if (pid > 0) {
         ps();
     }
