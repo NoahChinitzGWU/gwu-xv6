@@ -19,12 +19,10 @@ main(void)
                 if (pid < 0) {
                     exit();
                 } else if (pid == 0) {
-                    // sleep(100);
-                    wait();
+                    sleep(100);
                     exit();
                 }
             }
-            sleep(50);
             wait();
             wait();
             exit();
