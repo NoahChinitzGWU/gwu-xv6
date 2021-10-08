@@ -24,10 +24,13 @@ main(void)
                     exit();
                 }
             }
+            sleep(50);
+            wait();
             wait();
             exit();
         }
     }
+    sleep(10);
     if (pid > 0) {
         ps();
     }
