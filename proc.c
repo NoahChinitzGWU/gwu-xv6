@@ -517,8 +517,14 @@ procdump(void)
 int 
 procstat(uint which, struct pstat *ps) {
 	// Edge Case Testing [Invalid Parameter]: 
-	if (which < 0 ) {
+	if (ps == 0) { // Checking if it is null
 		return -1;
+	}
+
+	// Which cannot be greater than 64/NPROC
+	// Which has become as large as the number of active processes
+	if (which > NPROC) {
+		return 1;
 	}
 
 	// Acquire informaiton for all processes in the system
@@ -531,6 +537,7 @@ procstat(uint which, struct pstat *ps) {
 		// Checking to see if we found the process defined by which
 		if (which == count) {
 			// If the process is UNUSED, it is freed and we should not return information for it
+			// DONT HAVE TO RETURN ANYTHING PROBABLY???
 			if (p->state == UNUSED) {
 				release(&ptable.lock);
 				return -1;
@@ -540,7 +547,7 @@ procstat(uint which, struct pstat *ps) {
 
 			// For init process, it should have its own pid as its ppid
 			// COMPARE THE STRING NAMES
-			if (strncmp(p->name, "init", 4) == 0) {
+			if (strncmp(p->name, "init", strlen(p->name)) == 0) {
 				ps->pid = p->pid;
 				ps->ppid = p->pid;
 			}
