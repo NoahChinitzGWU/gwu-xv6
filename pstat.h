@@ -1,3 +1,4 @@
+// Holds all important information about each process
 struct pstat {
     int pid; // Process id of process you're printing information for
     int ppid; // Process' parent's process id (pid)

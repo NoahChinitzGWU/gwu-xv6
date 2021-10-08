@@ -98,6 +98,7 @@ memmove(void *vdst, void *vsrc, int n)
 	return vdst;
 }
 
+// ps function that prints out all active processes
 void 
 ps(void)
 {
