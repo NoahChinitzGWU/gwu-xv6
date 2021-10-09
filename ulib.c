@@ -105,8 +105,10 @@ ps(void)
 	struct pstat ps;
 	int result;
 	uint i;
+	// since there can only be 64 processes we should not iterate past that
 	for (i = 0; i < 64; i++) {
 		result = procstat(i, &ps);
+		// If UNUSED or error then go past that process
 		if (result == 1 || result == -1) {
 			continue;
 		}
