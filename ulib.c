@@ -104,7 +104,8 @@ ps(void)
 {
 	struct pstat ps;
 	int result;
-	for (int i = 0; i < 64; i++) {
+	uint i;
+	for (i = 0; i < 64; i++) {
 		result = procstat(i, &ps);
 		if (result == 1 || result == -1) {
 			continue;
@@ -114,4 +115,5 @@ ps(void)
 			// Setting first argument to 1 so it can print to standard output
 			printf(1, "%d %d %c %s\n", ps.pid, ps.ppid, ps.state, ps.name);
 		}
+	}
 }
