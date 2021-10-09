@@ -537,10 +537,9 @@ procstat(uint which, struct pstat *ps) {
 		// Checking to see if we found the process defined by which
 		if (which == count) {
 			// If the process is UNUSED, it is freed and we should not return information for it
-			// DONT HAVE TO RETURN ANYTHING PROBABLY???
 			if (p->state == UNUSED) {
 				release(&ptable.lock);
-				return -1;
+				return 1;
 			}
 			// Insert information regarding the process to ps
 			safestrcpy(ps->name, p->name, sizeof(p->name));
