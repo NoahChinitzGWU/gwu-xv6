@@ -3,6 +3,7 @@
 #include "fcntl.h"
 #include "user.h"
 #include "x86.h"
+#include "pstat.h"
 
 char *
 strcpy(char *s, char *t)
@@ -95,4 +96,26 @@ memmove(void *vdst, void *vsrc, int n)
 	src = vsrc;
 	while (n-- > 0) *dst++= *src++;
 	return vdst;
+}
+
+// ps function that prints out all active processes
+void 
+ps(void)
+{
+	struct pstat ps;
+	int result;
+	uint i;
+	// since there can only be 64 processes we should not iterate past that
+	for (i = 0; i < 64; i++) {
+		result = procstat(i, &ps);
+		// If UNUSED or error then go past that process
+		if (result == 1 || result == -1) {
+			continue;
+		}
+		else {
+			// First argument = "file descriptor" to print to
+			// Setting first argument to 1 so it can print to standard output
+			printf(1, "%d %d %c %s\n", ps.pid, ps.ppid, ps.state, ps.name);
+		}
+	}
 }

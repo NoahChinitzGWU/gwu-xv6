@@ -8,6 +8,7 @@ struct rtcdate;
 struct spinlock;
 struct sleeplock;
 struct stat;
+struct pstat;
 struct superblock;
 
 // bio.c
@@ -120,6 +121,7 @@ void         userinit(void);
 int          wait(void);
 void         wakeup(void *);
 void         yield(void);
+int          procstat(uint, struct pstat *);
 
 // swtch.S
 void swtch(struct context **, struct context *);

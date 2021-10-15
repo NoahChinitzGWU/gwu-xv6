@@ -174,7 +174,10 @@ UPROGS=\
 	_usertests\
 	_wc\
 	_zombie\
-	_malloctest\
+	_pstest1\
+	_pstest2\
+	_pstest3\
+	_ps\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

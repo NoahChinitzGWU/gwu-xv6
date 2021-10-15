@@ -1,4 +1,5 @@
 struct stat;
+struct pstat;
 struct rtcdate;
 
 // system calls
@@ -23,7 +24,7 @@ int   getpid(void);
 char *sbrk(int);
 int   sleep(int);
 int   uptime(void);
-char *getheapptr(void);
+int   procstat(uint, struct pstat *);
 
 // ulib.c
 int   stat(char *, struct stat *);
@@ -38,3 +39,4 @@ void *memset(void *, int, uint);
 void *malloc(uint);
 void  free(void *);
 int   atoi(const char *);
+void  ps(void);

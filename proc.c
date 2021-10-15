@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "pstat.h"
 
 struct {
 	struct spinlock lock;
@@ -505,4 +506,97 @@ procdump(void)
 		}
 		cprintf("\n");
 	}
+}
+
+// which: Specifies which of the active processes in the system the caller wants information about
+// which is not a process id, or any similar value
+// Return 0: While sys. call returns information about the process in the struct pstat arugment.
+// Return 1: which gets as large as the number of active processes in the system
+//           Indicate that the caller has iterated through each proccess in the system
+// Return -1: Any error cases
+int 
+procstat(uint which, struct pstat *ps) {
+	// Edge Case Testing [Invalid Parameter]: 
+	if (ps == 0) { // Checking if it is null
+		return -1;
+	}
+
+	// Which cannot be greater than 64/NPROC
+	// Which has become as large as the number of active processes
+	if (which > NPROC) {
+		return 1;
+	}
+
+	// Acquire informaiton for all processes in the system
+	acquire(&ptable.lock);
+
+	// Looking through the process table to find the "ith" process defined by which
+	uint count = 0;
+	struct proc *p;
+	for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+		// Checking to see if we found the process defined by which
+		if (which == count) {
+			// If the process is UNUSED, it is freed and we should not return information for it
+			if (p->state == UNUSED) {
+				release(&ptable.lock);
+				return 1;
+			}
+			// Insert information regarding the process to ps
+			safestrcpy(ps->name, p->name, sizeof(p->name));
+
+			// For init process, it should have its own pid as its ppid
+			// COMPARE THE STRING NAMES
+			if (strncmp(p->name, "init", strlen(p->name)) == 0) {
+				ps->pid = p->pid;
+				ps->ppid = p->pid;
+			}
+			else {
+				ps->pid = p->pid;
+
+				// Process State = Embryo
+				if (p->state == EMBRYO) {
+					ps->state = 'E';
+
+					// Process in EMBRYO state doesn't have valid ppid, so we set it to 0
+					ps->ppid = 0;
+				}
+				else {
+					ps->ppid = p->parent->pid;
+				}
+			}
+
+			// Process state = Sleeping
+			if (p->state == SLEEPING) {
+				ps->state = 'S';
+			}
+
+			// Process state = Runnable
+			if (p->state == RUNNABLE) {
+				ps->state = 'N';
+			}
+
+			// Process state = Running
+			if (p->state == RUNNING) {
+				ps->state = 'R';
+			}
+
+			// Process state = Zombie
+			if (p->state == ZOMBIE) {
+				ps->state = 'Z';
+			}
+
+			release(&ptable.lock);
+			return 0;
+		}
+		count++;
+	}
+
+	release(&ptable.lock);
+	
+	// Which gets as large as the number of active processes in the system
+	if (which >= count) {
+		return 1;
+	}
+
+	return -1;
 }

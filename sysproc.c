@@ -6,6 +6,7 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "pstat.h"
 
 int
 sys_fork(void)
@@ -86,9 +87,20 @@ sys_uptime(void)
 	return xticks;
 }
 
-int
-sys_getheapptr(void)
+// Logic that the kernel will execute in response to receiving the 
+// procstat syscall.
+int 
+sys_procstat(void) 
 {
-	struct proc *p = myproc();
-	return p->sz;
+	struct pstat *ps;
+	uint which;
+	// Getting the which argument
+	if (argint(0, (int *)&which) < 0) {
+		return -1;
+	}
+	// Getting the pstat argument
+	if (argptr(1, (void *)&ps, sizeof(*ps)) < 0) {
+		return -1;
+	}
+	return procstat(which, ps);
 }
